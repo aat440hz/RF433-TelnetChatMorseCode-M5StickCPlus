@@ -39,6 +39,8 @@ char receivedMessage[256] = "";
 
 bool wifiHotspotEnabled = false; // Set to true to enable Wi-Fi hotspot, false to disable
 
+#define LED_PIN 10 // Define the GPIO pin for the LED
+
 void initRMT() {
 #ifndef RF433RX
     rmt_config_t txconfig;
@@ -170,6 +172,11 @@ void setup() {
     M5.Lcd.setCursor(5, 40);
     M5.Lcd.setTextColor(TFT_WHITE);
     M5.Lcd.setTextSize(2);
+    
+    // Initialize the LED pin and turn it off
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, HIGH);
+
     pinMode(RTM_TX_GPIO_NUM, OUTPUT);
     pinMode(RTM_RX_GPIO_NUM, INPUT);
     initRMT();
@@ -272,10 +279,14 @@ void loop() {
                     char morseChar = morseMessage[i];
                     if (morseChar == '.') {
                         M5.Beep.tone(1000); // Dot: 1000 Hz
+                        digitalWrite(LED_PIN, HIGH); // Turn on the LED
                         delay(300);         // Short beep duration
+                        digitalWrite(LED_PIN, LOW); // Turn off the LED
                     } else if (morseChar == '-') {
                         M5.Beep.tone(1000); // Dash: 1000 Hz
+                        digitalWrite(LED_PIN, HIGH); // Turn on the LED
                         delay(900);         // Long beep duration
+                        digitalWrite(LED_PIN, LOW); // Turn off the LED
                     } else if (morseChar == ' ') {
                         delay(300);         // Pause between characters
                     }
